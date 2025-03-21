@@ -4,6 +4,7 @@ import Home from "../Components/home";
 import Patient from "../Components/Patient"; 
 import Doctor from "../Components/Doctor";  // Import your screens
 import register from "../Components/register";
+import interfaceScreen from "../Components/interfaceScreen";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
         <Stack.Screen name="Patient" component={Patient} />
         <Stack.Screen name="Doctor" component={Doctor} />
         <Stack.Screen name="register" component={register} />
+        <Stack.Screen name="interfaceScreen" component={interfaceScreen} />
       </Stack.Navigator>
   );
 }

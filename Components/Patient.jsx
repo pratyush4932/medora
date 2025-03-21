@@ -84,7 +84,7 @@ const Patient = ({ navigation }) => {
         </View>
 
         {/* Sign In Button */}
-        <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+        <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate("interfaceScreen")}>
           <Text style={styles.signInButtonText}>SIGN IN</Text>
         </TouchableOpacity>
 
