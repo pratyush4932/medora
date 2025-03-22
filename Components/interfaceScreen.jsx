@@ -37,7 +37,7 @@ const interfaceScreen = () => {
   
   const medications = [
     { 
-      name: 'Roaccutane 30mg', 
+      name: 'Defaxin 30mg', 
       time: '8:00 AM', 
       dosage: '1 tablet', 
       instruction: 'Before food',
@@ -45,13 +45,21 @@ const interfaceScreen = () => {
       completed: true
     },
     { 
-      name: 'Omega 3', 
-      time: '8:00 AM', 
+      name: 'Clonazepam', 
+      time: '9:00 PM', 
       dosage: '2 pills', 
       instruction: 'Before food',
       icon: 'capsule',
       completed: true,
       color: '#FFC107'
+    },
+    { 
+      name: 'NORMOZ', 
+      time: '11:00 PM', 
+      dosage: '1 pill', 
+      instruction: 'Before sleep',
+      icon: 'capsule',
+      completed: false
     },
     { 
       name: 'Vitamin D', 
@@ -60,7 +68,7 @@ const interfaceScreen = () => {
       instruction: 'Before food',
       icon: 'dropper',
       completed: false
-    }
+    },
   ];
 
   const renderIcon = (type) => {
@@ -108,7 +116,7 @@ const interfaceScreen = () => {
       </View>
       
       {/* Greeting */}
-      <Text style={styles.greeting}>Hello </Text>
+      <Text style={styles.greeting}>Hello, Roma </Text>
       
       {/* Health Article */}
       <GradientView style={styles.articleContainer}>
@@ -317,14 +325,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   daysContainer: {
-    marginTop: 20,
+    marginTop: 2,
+    marginBottom: 2,
+    height: 1,
     paddingHorizontal: 15,
   },
   dayItem: {
     alignItems: 'center',
     marginHorizontal: 5,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 1,
     borderRadius: 15,
   },
   selectedDay: {
@@ -344,14 +354,15 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   timeframesContainer: {
-    marginTop: 20,
+    marginTop: 2,
     paddingHorizontal: 15,
-    marginBottom: 10,
+    marginBottom: -1,
   },
   timeframeItem: {
     paddingHorizontal: 18,
-    paddingVertical: 8,
+    paddingVertical: 4,
     borderRadius: 20,
+    height: 90,
     marginRight: 10,
     backgroundColor: '#F5F5F5',
   },
@@ -367,7 +378,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   medicationsContainer: {
-    marginTop: 10,
+    marginTop: 1,
+    top:-100,
+    height: 180,
     paddingHorizontal: 20,
     flex: 1,
   },
