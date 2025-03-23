@@ -1,95 +1,99 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { Image } from 'react-native';
 
-const HomeScreen = ({ navigation }) => {
+const { width, height } = Dimensions.get('window');
 
+const home = () => {
   return (
-    <>
- <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
-      <View style={styles.fullScreenContainer}>
-      <Text style={styles.titletext}>Select Your Preferred Mode: </Text>
-        <View style={styles.contentContainer}>
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate("Patient")}>
-            <View style={[styles.circleButton, styles.patientButton]}>
-              {/* Inner Shadow Layer */}
-              <View style={styles.innerShadow} />
-              <Text style={styles.emoji}>😷</Text>
-            </View>
-            <Text style={styles.buttonText}>PATIENT</Text>
-          </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <TouchableOpacity
+          style={[styles.card, styles.patientCard]}
+          activeOpacity={0.9}
+        >
+          <View style={styles.imageContainer}>
+            {/* Image placeholder for patient */}
+            <Image 
+  source={require('../images/patient.png')} 
+  // Or for network images: source={{uri: 'https://example.com/patient-image.jpg'}}
+  style={styles.image} 
+  resizeMode="cover"
+/>
+          </View>
+          <Text style={styles.cardText}>PATIENT</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate("Doctor")}>
-            <View style={[styles.circleButton, styles.doctorButton]}>
-              {/* Inner Shadow Layer */}
-              <View style={styles.innerShadow} />
-              <Text style={styles.emoji}>👨‍⚕️</Text>
-            </View>
-            <Text style={styles.buttonText}>DOCTOR</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[styles.card, styles.doctorCard]}
+          activeOpacity={0.9}
+        >
+          <View style={styles.imageContainer}>
+            {/* Image placeholder for doctor */}
+            <Image 
+  source={require('../images/doctor.png')} 
+  // Or for network images: source={{uri: 'https://example.com/patient-image.jpg'}}
+  style={styles.image} 
+  resizeMode="cover"
+/>
+          </View>
+          <Text style={styles.cardText}>DOCTOR</Text>
+        </TouchableOpacity>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  fullScreenContainer: {
+  container: {
     flex: 1,
-    backgroundColor: '#1D1B2F',
+    backgroundColor: '#1E1E2E',
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
     paddingHorizontal: 20,
   },
-  buttonContainer: {
+  card: {
+    width: width * 0.85,
+    height: height * 0.15,
+    borderRadius: 15,
+    marginVertical: 15,
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 15,
+    overflow: 'hidden',
   },
-  titletext:{
-    color: 'white',
-    fontSize: 25,
-    marginBottom: 20,
+  patientCard: {
+    backgroundColor: '#C26E6E', // Pink/red color like in the design
   },
-  circleButton: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+  doctorCard: {
+    backgroundColor: '#4DA6CD', // Blue color like in the design
+  },
+  imageContainer: {
+    height: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
+    alignItems: 'flex-start',
+    flex: 1,
   },
-  innerShadow: {
-    position: 'absolute',
-    width: '90%', // Slightly smaller than the button
-    height: '90%', // Slightly smaller than the button
-    borderRadius: 50, // Adjusted for the smaller size (85% of 60)
-    backgroundColor: 'transparent',
-    shadowColor: '#FFFFFF', // Dark shadow for inner effect
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.6,
-    shadowRadius: 60,
-    elevation: 8, // For Android
-    zIndex: 0, // Behind the emoji
+  imagePlaceholder: {
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    // You can add a border to make the placeholder more visible
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    marginRight: 10,
   },
-  patientButton: {
-    backgroundColor: '#C70E0E',
-  },
-  doctorButton: {
-    backgroundColor: '#2043E0',
-
-  },
-  buttonText: {
+  cardText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-  },
-  emoji: {
-    fontSize: 50,
+    flex: 1,
+    textAlign: 'center',
   },
 });
 
-
-export default HomeScreen;
+export default home;
