@@ -33,11 +33,12 @@ const Patient = ({ navigation }) => {
       <View style={styles.container}>
         {/* Avatar and Welcome */}
         <View style={styles.welcomeContainer}>
-          <View style={styles.avatarContainer}>
-            <View style={styles.avatar}>
-              <View style={styles.avatarHead} />
-            </View>
-          </View>
+           <View style={styles.imageContainer}>
+                        <Image 
+                          source={require('../images/patient.png')} 
+                          style={styles.image} 
+                        />
+                      </View>
           <Text style={styles.welcomeText}>Welcome !</Text>
         </View>
 
@@ -109,29 +110,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   welcomeContainer: {
-    alignItems: 'center',
+   
     marginBottom: 40,
-  },
-  avatarContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: 'white',
+    display: 'flex',
+    flexDirection:'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    width: '50%',
   },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    position: 'relative',
-  },
-  avatarHead: {
+    imageContainer: {
+      width: 140, // Adjusted width for profile picture
+      height: 140, 
+      
+      // Adjusted height for profile picture
+    },
 
-  },
+    image: {
+      resizeMode: 'contain',
+      width: '100%', // Ensure image fits the container
+      height: '100%',
+      borderRadius: 100,
+      backgroundColor: '#BE464E', // Ensure image fits the container
+    },
+
+
   welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
   otpButton: {
     position: 'absolute',
     right: 5,
-    backgroundColor: 'rgba(102, 102, 153, 0.8)',
+    backgroundColor: 'rgba(248, 16, 16, 0.97)',
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,

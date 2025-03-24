@@ -1,44 +1,58 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { Image } from 'react-native';
+import { Shadow } from 'react-native-shadow-2';
 
 const { width, height } = Dimensions.get('window');
 
 const home = () => {
+    const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <TouchableOpacity
-          style={[styles.card, styles.patientCard]}
-          activeOpacity={0.9}
+        <Shadow
+          distance={10}
+          startColor={'hsla(0, 4.00%, 44.10%, 0.50)'}
+          offset={[5, 10]}
+          containerViewStyle={styles.shadowContainer}
         >
-          <View style={styles.imageContainer}>
-            {/* Image placeholder for patient */}
-            <Image 
-  source={require('../images/patient.png')} 
-  // Or for network images: source={{uri: 'https://example.com/patient-image.jpg'}}
-  style={styles.image} 
-  resizeMode="cover"
-/>
-          </View>
-          <Text style={styles.cardText}>PATIENT</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.card, styles.patientCard]}
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('Patient')}
+          >
+            <View style={styles.imageContainer}>
+              <Image 
+                source={require('../images/patient.png')} 
+                style={styles.image} 
+              />
+            </View>
+            <Text style={styles.cardText}>PATIENT</Text>
+          </TouchableOpacity>
+        </Shadow>
 
-        <TouchableOpacity
-          style={[styles.card, styles.doctorCard]}
-          activeOpacity={0.9}
+        <Shadow
+          distance={10}
+          startColor={'hsla(0, 4.00%, 44.10%, 0.50)'}
+          offset={[5, 10]}
+          containerViewStyle={styles.shadowContainer}
         >
-          <View style={styles.imageContainer}>
-            {/* Image placeholder for doctor */}
-            <Image 
-  source={require('../images/doctor.png')} 
-  // Or for network images: source={{uri: 'https://example.com/patient-image.jpg'}}
-  style={styles.image} 
-  resizeMode="cover"
-/>
-          </View>
-          <Text style={styles.cardText}>DOCTOR</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.card, styles.doctorCard]}
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('Doctor')}
+          >
+            <Text style={styles.cardText}>DOCTOR</Text>
+            <View style={styles.imageContainer}>
+              <Image 
+                source={require('../images/doctor.png')} 
+                style={styles.docimage} 
+              />
+            </View>
+          </TouchableOpacity>
+        </Shadow>
       </View>
     </SafeAreaView>
   );
@@ -55,21 +69,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
+  shadowContainer: {
+    marginVertical: 1,
+  },
   card: {
     width: width * 0.85,
-    height: height * 0.15,
+    height: height * 0.22,
     borderRadius: 15,
-    marginVertical: 15,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 15,
+    marginVertical: 15,
     overflow: 'hidden',
   },
   patientCard: {
-    backgroundColor: '#C26E6E', // Pink/red color like in the design
+    backgroundColor: '#BE464E',
   },
   doctorCard: {
-    backgroundColor: '#4DA6CD', // Blue color like in the design
+    backgroundColor: '#2779A8',
   },
   imageContainer: {
     height: '100%',
@@ -77,19 +94,19 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flex: 1,
   },
-  imagePlaceholder: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    // You can add a border to make the placeholder more visible
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    marginRight: 10,
+  image: {
+    width: '100%',
+    height: '1200%',
+    resizeMode: 'contain',
+  },
+  docimage: {
+      width: '130%',
+      height: '105%',
+      resizeMode: 'contain',
   },
   cardText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     flex: 1,
     textAlign: 'center',

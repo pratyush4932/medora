@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Image } from 'react-native';
 
 const Doctor = () => {
   const insets = useSafeAreaInsets();
@@ -28,9 +29,15 @@ const Doctor = () => {
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       <View style={styles.fullScreenContainer}>
         <View style={[styles.doctorButton]}>
-             <Text style={styles.emoji}>👨‍⚕️</Text>
+             <View style={styles.imageContainer}>
+                 <Image 
+                      source={require('../images/doctor.png')} 
+                      style={styles.image} 
+                  />
+              </View>
         </View>
-        <Text style={styles.heading}>Hello Doctor!</Text>
+        <Text style={styles.heading}>Hello Doc!</Text>
+        <Text style={styles.heading2}>Fill this form to register yourself</Text>
         <View style={styles.inputContainer}>
           <TextInput style={styles.input} placeholder="NAME" placeholderTextColor="#ccc" onChangeText={(text) => handleInputChange('name', text)} />
           <TextInput style={styles.input} placeholder="DATE OF BIRTH" placeholderTextColor="#ccc" onChangeText={(text) => handleInputChange('dob', text)} />
@@ -63,10 +70,33 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 20,
+    marginBottom: 10,
+  },
+  heading2: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 25,
+  },
+  imageContainer: {
+    width: 140, // Adjusted width for profile picture
+    height: 140, 
+    
+    // Adjusted height for profile picture
+  },
+
+  image: {
+    resizeMode: 'contain',
+    width: '100%', // Ensure image fits the container
+    height: '100%',
+    borderRadius: 100,
+    backgroundColor: 'rgb(5, 96, 201)', // Ensure image fits the container
   },
   inputContainer: {
     width: '100%',
+    padding:20,
+    borderRadius: 10,
+    backgroundColor: 'rgb(88, 135, 173)',
   },
   doctorButton: {
     backgroundColor: '#2196F3',
@@ -92,10 +122,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#00082F',
+    backgroundColor: 'rgb(5, 96, 201)',
     paddingVertical: 12,
     paddingHorizontal: 50,
-    borderRadius: 20,
+    borderRadius: 25,
     marginTop: 15,
   },
   buttonText: {
