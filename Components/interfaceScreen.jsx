@@ -46,7 +46,7 @@ const PrescriptionApp = () => {
           <Text style={styles.greenButtonText}>Medicine</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.greenButton}>
-          <Text style={styles.greenButtonText}>View</Text>
+          <Text style={styles.greenButtonText}>QR</Text>
         </TouchableOpacity>
       </View>
 
