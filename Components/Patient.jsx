@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   otpButton: {
     position: 'absolute',
     right: 5,
-    backgroundColor: 'rgba(248, 16, 16, 0.97)',
+    backgroundColor: 'rgb(248, 16, 16)',
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
