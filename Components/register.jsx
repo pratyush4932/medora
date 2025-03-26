@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView, 
   Platform 
 } from 'react-native';
+import { Image } from 'react-native';
 
 const register = () => {
   const [name, setName] = useState('');
@@ -31,9 +32,12 @@ const register = () => {
         <View style={styles.card}>
           {/* Profile Icon */}
           <View style={styles.profileIconContainer}>
-            <View style={styles.profileIcon}>
-              <Text style={styles.profileIconText}>👤</Text>
-            </View>
+           <View style={styles.imageContainer}>
+                                   <Image 
+                                     source={require('../images/patient.png')} 
+                                     style={styles.image} 
+                                   />
+                                 </View>
           </View>
           
           {/* Welcome Text */}
@@ -50,7 +54,7 @@ const register = () => {
             />
             
             <TextInput
-              style={[styles.input, styles.darkInput]}
+              style={[styles.input, ]}
               placeholder="DATE OF BIRTH"
               placeholderTextColor="#fff"
               value={dateOfBirth}
@@ -101,6 +105,26 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  imageContainer: {
+    width: 140, // Adjusted width for profile picture
+    height: 140, 
+    
+    // Adjusted height for profile picture
+  },
+
+  image: {
+    resizeMode: 'contain',
+    width: '100%', // Ensure image fits the container
+    height: '100%',
+    borderRadius: 100,
+    backgroundColor: 'rgb(5, 96, 201)', // Ensure image fits the container
+  },
+  inputContainer: {
+    width: '100%',
+    padding:20,
+    borderRadius: 10,
+    backgroundColor: 'rgb(88, 135, 173)',
   },
   card: {
     width: '85%',
