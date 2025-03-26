@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const PrescriptionApp = () => {
+const interfaceScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       {/* Hamburger Menu */}
@@ -25,7 +25,7 @@ const PrescriptionApp = () => {
       <Text style={styles.helloText}>Hello, User</Text>
 
       {/* Upload Prescription Button */}
-      <TouchableOpacity style={styles.uploadButton}>
+      <TouchableOpacity style={styles.uploadButton} onPress={() => navigation.navigate("UploadScreen")}>
         <Icon name="cloud-upload" size={40} color="white" />
         <Text style={styles.uploadButtonText}>UPLOAD PRESCRIPTION</Text>
       </TouchableOpacity>
@@ -147,4 +147,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PrescriptionApp;
+export default interfaceScreen;
