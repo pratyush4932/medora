@@ -88,9 +88,6 @@ Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) and ensure your code 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
-For questions, suggestions, or support, reach out to us at [your-email@example.com](mailto:your-email@example.com) or open an issue in this repository.
-
 ## Acknowledgments
 - Special thanks to the xAI team for inspiration and tools.
 - Gratitude to the open-source community for supporting our tech stack.
