@@ -8,7 +8,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const interfaceScreen = ({navigation}) => {
+import { useRouter } from 'expo-router';
+
+const interfaceScreen = () => {
+  const router = useRouter();
+  
   return (
     <View style={styles.container}>
       {/* Hamburger Menu */}
@@ -25,7 +29,7 @@ const interfaceScreen = ({navigation}) => {
       <Text style={styles.helloText}>Hello, User</Text>
 
       {/* Upload Prescription Button */}
-      <TouchableOpacity style={styles.uploadButton} onPress={() => navigation.navigate("UploadScreen")}>
+      <TouchableOpacity style={styles.uploadButton} onPress={() => router.push('/upload')}>
         <Icon name="cloud-upload" size={40} color="white" />
         <Text style={styles.uploadButtonText}>UPLOAD PRESCRIPTION</Text>
       </TouchableOpacity>

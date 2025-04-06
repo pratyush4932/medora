@@ -33,10 +33,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1D1B2F"
       },
-  "scheme": "myapp"
+      "scheme": "myapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+  [
+    "expo-camera",
+    {
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
     }
+  ]
+]
   }
 }

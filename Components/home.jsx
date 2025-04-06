@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { Image } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
@@ -7,7 +7,7 @@ import { Shadow } from 'react-native-shadow-2';
 const { width, height } = Dimensions.get('window');
 
 const home = () => {
-    const navigation = useNavigation();
+    const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -21,11 +21,11 @@ const home = () => {
           <TouchableOpacity
             style={[styles.card, styles.patientCard]}
             activeOpacity={0.9}
-            onPress={() => navigation.navigate('Patient')}
+            onPress={() => router.push('/patient')}
           >
             <View style={styles.imageContainer}>
               <Image 
-                source={require('../images/patient.png')} 
+                source={require('./images/patient.png')} 
                 style={styles.image} 
               />
             </View>
@@ -42,12 +42,12 @@ const home = () => {
           <TouchableOpacity
             style={[styles.card, styles.doctorCard]}
             activeOpacity={0.9}
-            onPress={() => navigation.navigate('Doctor')}
+            onPress={() => router.push('/doctor')}
           >
             <Text style={styles.cardText}>DOCTOR</Text>
             <View style={styles.imageContainer}>
               <Image 
-                source={require('../images/doctor.png')} 
+                source={require('./images/doctor.png')} 
                 style={styles.docimage} 
               />
             </View>
@@ -95,14 +95,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: '100%',
-    height: '1200%',
+    width: 120,
+    height: 120,
     resizeMode: 'contain',
   },
   docimage: {
-      width: '130%',
-      height: '105%',
-      resizeMode: 'contain',
+    width: 120,
+    height: 120,
+    resizeMode: 'contain',
   },
   cardText: {
     color: 'white',

@@ -1,0 +1,362 @@
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  Alert
+} from 'react-native';
+import { Camera } from 'expo-camera';
+import Icon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
+
+const QRScanScreen = ({ navigation }) => {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPermissionDialog, setShowPermissionDialog] = useState(true);
+  const cameraRef = useRef(null);
+
+  useEffect(() => {
+    if (!showPermissionDialog) {
+      (async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setHasPermission(status === 'granted');
+      })();
+    }
+  }, [showPermissionDialog]);
+
+  const requestCameraPermission = async () => {
+    console.log('Requesting camera permission...');
+    try {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      console.log('Camera permission status:', status);
+      setHasPermission(status === 'granted');
+      setShowPermissionDialog(false);
+    } catch (error) {
+      console.error('Error requesting camera permission:', error);
+      setHasPermission(false);
+      setShowPermissionDialog(false);
+    }
+  };
+
+  const handleBarCodeScanned = async ({ type, data }) => {
+    if (scanned || loading) return;
+    
+    setScanned(true);
+    setLoading(true);
+    
+    try {
+      console.log('QR code scanned with ID:', data);
+      
+      // Make API request to fetch prescription details
+      const response = await axios.get(`http://192.168.29.64:3000/prescriptions/${data}`);
+      
+      const prescriptionData = {
+        prescription: response.data
+      };
+      
+      // Navigate to prescription results screen with the data
+      navigation.navigate('PrescriptionResults', { 
+        prescriptionData: prescriptionData,
+        prescriptionFile: null
+      });
+      
+    } catch (error) {
+      console.error('Error fetching prescription data:', error);
+      Alert.alert(
+        'Error',
+        'Failed to fetch prescription details. Please try again.',
+        [{ text: 'OK' }]
+      );
+      setScanned(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderPermissionDialog = () => {
+    return (
+      <View style={styles.centeredContainer}>
+        <Icon name="camera" size={50} color="#1CAA6E" />
+        <Text style={styles.statusText}>Camera Permission Required</Text>
+        <Text style={styles.instructionText}>
+          To scan QR codes, we need access to your device's camera.
+        </Text>
+        <View style={styles.permissionButtons}>
+          <TouchableOpacity 
+            style={[styles.button, styles.denyButton]}
+            onPress={() => {
+              setHasPermission(false);
+              setShowPermissionDialog(false);
+            }}
+          >
+            <Text style={styles.buttonText}>Deny</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={requestCameraPermission}
+          >
+            <Text style={styles.buttonText}>Allow</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const renderContent = () => {
+    if (showPermissionDialog) {
+      return renderPermissionDialog();
+    }
+
+    if (hasPermission === null && !showPermissionDialog) {
+      return (
+        <View style={styles.centeredContainer}>
+          <ActivityIndicator size="large" color="#1CAA6E" />
+          <Text style={styles.statusText}>Processing permission...</Text>
+        </View>
+      );
+    }
+    
+    if (hasPermission === false) {
+      return (
+        <View style={styles.centeredContainer}>
+          <Icon name="ios-camera-outline" size={50} color="#1CAA6E" />
+          <Text style={styles.statusText}>Camera access denied</Text>
+          <Text style={styles.instructionText}>
+            Camera permission is required to scan QR codes
+          </Text>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={() => setShowPermissionDialog(true)}
+          >
+            <Text style={styles.buttonText}>Request Permission</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    
+    if (loading) {
+      return (
+        <View style={styles.centeredContainer}>
+          <ActivityIndicator size="large" color="#1CAA6E" />
+          <Text style={styles.statusText}>Fetching prescription...</Text>
+        </View>
+      );
+    }
+    
+    if (scanned && !loading) {
+      return (
+        <View style={styles.centeredContainer}>
+          <Icon name="checkmark-circle" size={50} color="#1CAA6E" />
+          <Text style={styles.statusText}>QR code detected</Text>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={() => setScanned(false)}
+          >
+            <Text style={styles.buttonText}>Scan Again</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    
+    // Return the camera component
+    return (
+      <View style={styles.cameraContainer}>
+        <Camera
+          ref={cameraRef}
+          style={StyleSheet.absoluteFillObject}
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          barCodeScannerSettings={{
+            barCodeTypes: ['qr']
+          }}
+        />
+        <View style={styles.scanOverlay}>
+          <View style={styles.scanArea}>
+            <View style={styles.cornerTopLeft} />
+            <View style={styles.cornerTopRight} />
+            <View style={styles.cornerBottomLeft} />
+            <View style={styles.cornerBottomRight} />
+          </View>
+          <Text style={styles.scanText}>Position QR code in frame</Text>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Icon name="arrow-back" size={24} color="white" />
+      </TouchableOpacity>
+      
+      <Text style={styles.title}>Scan Prescription QR</Text>
+      
+      <View style={styles.cameraContainer}>
+        {renderContent()}
+      </View>
+      
+      <View style={styles.bottomNavigation}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate("QRScan")}>
+          <Icon name="qr-code" size={24} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate("Medicine")}>
+          <Icon name="medkit" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#1E1E2C",
+  },
+  backButton: {
+    position: 'absolute',
+    top: 15,
+    left: 15,
+    zIndex: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  cameraContainer: {
+    flex: 1,
+    overflow: 'hidden',
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderRadius: 15,
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#2C2C3E',
+    borderRadius: 15,
+  },
+  camera: {
+    flex: 1,
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
+  scanOverlay: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scanArea: {
+    width: 250,
+    height: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  cornerTopLeft: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: 40,
+    width: 40,
+    borderTopWidth: 4,
+    borderLeftWidth: 4,
+    borderColor: '#1CAA6E',
+  },
+  cornerTopRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    height: 40,
+    width: 40,
+    borderTopWidth: 4,
+    borderRightWidth: 4,
+    borderColor: '#1CAA6E',
+  },
+  cornerBottomLeft: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    height: 40,
+    width: 40,
+    borderBottomWidth: 4,
+    borderLeftWidth: 4,
+    borderColor: '#1CAA6E',
+  },
+  cornerBottomRight: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    height: 40,
+    width: 40,
+    borderBottomWidth: 4,
+    borderRightWidth: 4,
+    borderColor: '#1CAA6E',
+  },
+  scanText: {
+    marginTop: 50,
+    color: '#1CAA6E',
+    backgroundColor: 'rgba(30, 30, 44, 0.7)',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    fontWeight: 'bold',
+  },
+  statusText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  instructionText: {
+    fontSize: 14,
+    color: '#BBBBBB',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  button: {
+    backgroundColor: '#1CAA6E',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    marginTop: 20,
+  },
+  denyButton: {
+    backgroundColor: '#666',
+    marginRight: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  permissionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  bottomNavigation: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#1CAA6E",
+    paddingVertical: 10,
+  },
+  navButton: {
+    padding: 5,
+  },
+});
+
+export default QRScanScreen;

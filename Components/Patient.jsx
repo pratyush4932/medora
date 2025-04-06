@@ -9,8 +9,10 @@ import {
   StatusBar
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
-const Patient = ({ navigation }) => {
+const Patient = () => {
+  const router = useRouter();
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -24,6 +26,7 @@ const Patient = ({ navigation }) => {
     // Logic for signing in
     console.log("Signing in with", mobileNumber, "and OTP", otp);
     // Navigate to main patient screen after successful login
+    router.push('/interface');
   };
 
 
@@ -35,7 +38,7 @@ const Patient = ({ navigation }) => {
         <View style={styles.welcomeContainer}>
            <View style={styles.imageContainer}>
                         <Image 
-                          source={require('../images/patient.png')} 
+                          source={require('./images/patient.png')} 
                           style={styles.image} 
                         />
                       </View>
@@ -85,12 +88,12 @@ const Patient = ({ navigation }) => {
         </View>
 
         {/* Sign In Button */}
-        <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate("interfaceScreen")}>
+        <TouchableOpacity style={styles.signInButton} onPress={() => router.push('/interfaceScreen')}>
           <Text style={styles.signInButtonText}>SIGN IN</Text>
         </TouchableOpacity>
 
         {/* Register Option */}
-        <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate("register")}>
+        <TouchableOpacity style={styles.registerButton} onPress={() => router.push('/register')}>
           <Text style={styles.registerButtonText}>New User? Register</Text>
         </TouchableOpacity>
       </View>

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const Doctor = () => {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +24,9 @@ const Doctor = () => {
   const handleRegister = () => {
     console.log('Doctor Registered:', formData);
     // Add form validation and backend integration here
+    
+    // Navigate to QR scan screen after registration
+    router.push('/doc_scan');
   };
 
   return (
@@ -31,7 +36,7 @@ const Doctor = () => {
         <View style={[styles.doctorButton]}>
              <View style={styles.imageContainer}>
                  <Image 
-                      source={require('../images/doctor.png')} 
+                      source={require('./images/doctor.png')} 
                       style={styles.image} 
                   />
               </View>
@@ -55,6 +60,7 @@ const Doctor = () => {
 };
 
 const styles = StyleSheet.create({
+  // Styles remain unchanged
   fullScreenContainer: {
     flex: 1,
     backgroundColor: '#1D1B2F',
@@ -79,22 +85,19 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   imageContainer: {
-    width: 140, // Adjusted width for profile picture
-    height: 140, 
-    
-    // Adjusted height for profile picture
+    width: 140,
+    height: 140,
   },
-
   image: {
     resizeMode: 'contain',
-    width: '100%', // Ensure image fits the container
+    width: '100%',
     height: '100%',
     borderRadius: 100,
-    backgroundColor: 'rgb(5, 96, 201)', // Ensure image fits the container
+    backgroundColor: 'rgb(5, 96, 201)',
   },
   inputContainer: {
     width: '100%',
-    padding:20,
+    padding: 20,
     borderRadius: 10,
     backgroundColor: 'rgb(88, 135, 173)',
   },
