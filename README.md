@@ -83,19 +83,12 @@ We welcome contributions to enhance Medora! To contribute:
 4. Push to your branch (`git push origin feature-branch`).
 5. Open a Pull Request with a clear description of your changes.
 
-Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) and ensure your code follows the project's style guidelines.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 - Special thanks to the xAI team for inspiration and tools.
 - Gratitude to the open-source community for supporting our tech stack.
 
 ---
-
-Happy coding with Medora!
-```
 
 ---
 
