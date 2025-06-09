@@ -1,8 +1,16 @@
 import React from 'react';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
-import { Image } from 'react-native';
-import { Shadow } from 'react-native-shadow-2';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
+import { Dimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -10,106 +18,157 @@ const home = () => {
     const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Shadow
-          distance={10}
-          startColor={'hsla(0, 4.00%, 44.10%, 0.50)'}
-          offset={[5, 10]}
-          containerViewStyle={styles.shadowContainer}
+    <LinearGradient
+      colors={['rgb(70, 99, 214)', 'rgb(70, 80, 122)', 'rgb(7, 31, 85)']}
+      start={{ x: -1, y: 0.8 }}
+      end={{ x: 1, y: 0.5 }}
+      style={{ flex: 1 }}
         >
-          <TouchableOpacity
-            style={[styles.card, styles.patientCard]}
-            activeOpacity={0.9}
+     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#2C3E87" />
+      
+      <View style={styles.content}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Text style={styles.brandName}>MED~ORA</Text>
+          <View style={styles.underline} />
+          <Text style={styles.tagline}>Your Health, Our Priority!</Text>
+        </View>
+
+        {/* Welcome Section */}
+        <View style={styles.welcomeSection}>
+          <Text style={styles.welcomeTitle}>WELCOME !</Text>
+          <Text style={styles.welcomeSubtitle}>
+            Let us make you feel better...
+          </Text>
+        </View>
+
+        {/* Selection Section */}
+        <View style={styles.selectionSection}>
+          <Text style={styles.selectText}>SELECT ONE</Text>
+          
+
+          <TouchableOpacity 
             onPress={() => router.push('/patient')}
           >
-            <View style={styles.imageContainer}>
-              <Image 
-                source={require('./images/patient.png')} 
-                style={styles.image} 
-              />
-            </View>
-            <Text style={styles.cardText}>PATIENT</Text>
+          <LinearGradient
+            colors={['rgb(255, 255, 255)', 'rgb(22, 38, 104)']}
+            start={{ x:0, y: 1.9 }}
+            end={{ x: 0.9, y: 0.1 }}
+            onPress={() => router.push('/patient')}
+            style={styles.button}>
+            <Text style={styles.buttonText}>Hey I'm Patient</Text>
+          </LinearGradient>
           </TouchableOpacity>
-        </Shadow>
 
-        <Shadow
-          distance={10}
-          startColor={'hsla(0, 4.00%, 44.10%, 0.50)'}
-          offset={[5, 10]}
-          containerViewStyle={styles.shadowContainer}
-        >
-          <TouchableOpacity
-            style={[styles.card, styles.doctorCard]}
-            activeOpacity={0.9}
-            onPress={() => router.push('/doctor')}
+          <TouchableOpacity 
+            onPress={() => router.push('/patient')}
           >
-            <Text style={styles.cardText}>DOCTOR</Text>
-            <View style={styles.imageContainer}>
-              <Image 
-                source={require('./images/doctor.png')} 
-                style={styles.docimage} 
-              />
-            </View>
+            <LinearGradient
+            colors={['rgb(255, 255, 255)', 'rgb(22, 38, 104)']}
+            start={{ x:0, y: 1.9 }}
+            end={{ x: 0.9, y: 0.1 }}
+            onPress={() => router.push('/patient')}
+            style={styles.button}>
+            
+            <Text style={styles.buttonText}>Hey I'm Doctor</Text>
+            </LinearGradient>
           </TouchableOpacity>
-        </Shadow>
+        </View>
       </View>
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1E1E2E',
+    
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 40,
+    justifyContent: 'space-between',
+  },
+  header: {
     alignItems: 'center',
-    paddingHorizontal: 20,
+    marginTop: 20,
   },
-  shadowContainer: {
-    marginVertical: 1,
+  brandName: {
+    fontSize: 36,
+    fontWeight: '300',
+    color: '#FFFFFF',
+    letterSpacing: 4,
+    marginBottom: 8,
   },
-  card: {
-    width: width * 0.85,
-    height: height * 0.22,
-    borderRadius: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    marginVertical: 15,
-    overflow: 'hidden',
+  underline: {
+    width: 60,
+    height: 1,
+    backgroundColor: '#FFFFFF',
+    marginBottom: 12,
   },
-  patientCard: {
-    backgroundColor: '#BE464E',
+  tagline: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontWeight: '300',
+    opacity: 0.9,
   },
-  doctorCard: {
-    backgroundColor: '#2779A8',
+  welcomeSection: {
+    fontFamily: 'Roboto',
+    marginTop: 50,
   },
-  imageContainer: {
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flex: 1,
-  },
-  image: {
-    width: 120,
-    height: 120,
-    resizeMode: 'contain',
-  },
-  docimage: {
-    width: 120,
-    height: 120,
-    resizeMode: 'contain',
-  },
-  cardText: {
-    color: 'white',
-    fontSize: 25,
+  welcomeTitle: {
+    fontSize: 40,
+    marginLeft: 20,
+    fontFamily: 'Roboto',
     fontWeight: 'bold',
-    flex: 1,
-    textAlign: 'center',
+    color: '#FFFFFF',
+  },
+  welcomeSubtitle: {
+    fontSize: 20,
+    color: '#FFFFFF',
+    marginLeft: 20,
+    fontStyle: 'italic',
+    opacity: 0.8,
+  },
+  selectionSection: {
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 0,
+  },
+  selectText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '500',
+    marginBottom: 20,
+    letterSpacing: 1,
+    opacity: 0.9,
+  },
+  button: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 36,
+    paddingVertical: 60,
+    paddingHorizontal: 80,
+    marginBottom: 30,
+    width: '100%',
+    maxWidth: 300,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'linear-gradient(rgb(141, 101, 173),rgb(236, 0, 0))',
+     elevation: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
+    letterSpacing: 0.5,
   },
 });
 

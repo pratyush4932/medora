@@ -10,6 +10,7 @@ import {
   Dimensions,
   SafeAreaView,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,6 +18,12 @@ export default function InterfaceScreen() {
   const [searchText, setSearchText] = useState('');
 
   return (
+    <LinearGradient
+      colors={['rgb(70, 99, 214)', 'rgb(16, 44, 156)', 'rgb(4, 27, 80)']}
+      start={{ x: -1, y: 0.8 }}
+      end={{ x: 1, y: 0.5 }}
+      style={{ flex: 1 }}
+        >
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1e1b4b" />
       
@@ -65,14 +72,13 @@ export default function InterfaceScreen() {
           <View style={styles.bannerContainer}>
             <View style={styles.banner}>
               <View style={styles.bannerContent}>
-                <Text style={styles.bannerSubtitle}>MED~ORA |weightWise</Text>
+                <Text style={styles.bannerSubtitle}>MED~ORA </Text>
                 <Text style={styles.bannerTitle}>
                   Control lifestyle diseases through India's 1st doctor-led healthy weight loss program
                 </Text>
                 <Text style={styles.bannerDoctor}>
                   -Dr. Helen Brooke Taussig (HOD){'\n'}
-                  MBBS.MD (Internal Medicine,{'\n'}
-                  USA
+                  MBBS.MD (Internal Medicine),USA
                 </Text>
                 <TouchableOpacity style={styles.exploreButton}>
                   <Text style={styles.exploreButtonText}>Explore Now</Text>
@@ -199,17 +205,16 @@ export default function InterfaceScreen() {
         </View>
       </View>
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1e1b4b',
   },
   gradient: {
     flex: 1,
-    backgroundColor: '#1e1b4b',
   },
   scrollView: {
     flex: 1,
@@ -281,7 +286,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.2)',
     borderRadius: 25,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 9,
     paddingRight: 50,
     color: 'white',
     fontSize: 14,
@@ -298,7 +303,7 @@ const styles = StyleSheet.create({
   // Banner Styles
   bannerContainer: {
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   banner: {
     backgroundColor: '#3730a3',
@@ -313,22 +318,22 @@ const styles = StyleSheet.create({
   },
   bannerSubtitle: {
     color: 'rgba(255,255,255,0.9)',
-    fontSize: 10,
+    fontSize: 8,
     fontWeight: '500',
     marginBottom: 4,
   },
   bannerTitle: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '500',
-    lineHeight: 18,
-    marginBottom: 12,
+    lineHeight: 14,
+    marginBottom: 8,
   },
   bannerDoctor: {
     color: 'rgba(255,255,255,0.8)',
-    fontSize: 10,
-    lineHeight: 12,
-    marginBottom: 12,
+    fontSize: 8,
+    lineHeight: 8,
+    marginBottom: 8,
   },
   exploreButton: {
     backgroundColor: 'rgba(255,255,255,0.2)',
