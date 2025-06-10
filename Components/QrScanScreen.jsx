@@ -3,11 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Alert } from 'r
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-const QrScanScreen = ({ navigation }) => {
+import { LinearGradient } from 'expo-linear-gradient';
+
+const QrScanScreen = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const cameraRef = useRef(null);
   const router = useRouter();
+
   const handleBarcodeScanned = ({ data }) => {
     if (!scanned) {
       setScanned(true);
@@ -16,7 +19,6 @@ const QrScanScreen = ({ navigation }) => {
         pathname: '/docres',
         params: { id: data },
       })
-      // navigation.navigate('PrescriptionDetails', { qrData: data });
     }
   };
 
@@ -26,58 +28,71 @@ const QrScanScreen = ({ navigation }) => {
 
   if (!permission.granted) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.statusText}>Camera permission is required</Text>
-        <TouchableOpacity style={styles.button} onPress={requestPermission}>
-          <Text style={styles.buttonText}>Grant Permission</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
+      <LinearGradient
+        colors={['rgb(70, 99, 214)', 'rgb(45, 62, 129)', 'rgb(5, 21, 59)']}
+        start={{ x: -1, y: 0.8 }}
+        end={{ x: 1, y: 0.5 }}
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView style={styles.container}>
+          <Text style={styles.statusText}>Camera permission is required</Text>
+          <TouchableOpacity style={styles.button} onPress={requestPermission}>
+            <Text style={styles.buttonText}>Grant Permission</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </LinearGradient>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="white" />
-      </TouchableOpacity>
+    <LinearGradient
+      colors={['rgb(70, 99, 214)', 'rgb(45, 62, 129)', 'rgb(5, 21, 59)']}
+      start={{ x: -1, y: 0.8 }}
+      end={{ x: 1, y: 0.5 }}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push('/doc_scan')}>
+          <Ionicons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity>
 
-      <Text style={styles.title}>Scan Prescription QR</Text>
+        <Text style={styles.title}>Scan Prescription</Text>
 
-      <View style={styles.cameraContainer}>
-        <CameraView
-          ref={cameraRef}
-          style={StyleSheet.absoluteFill}
-          barcodeScannerSettings={{
-            barcodeTypes: ['qr'], // You can also use `["qr", "code128", "ean13"]`
-          }}
-          onBarcodeScanned={handleBarcodeScanned}
-        />
-        {scanned && (
-          <TouchableOpacity
-            style={[styles.button, { position: 'absolute', bottom: 20 }]}
-            onPress={() => setScanned(false)}
-          >
-            <Text style={styles.buttonText}>Tap to Scan Again</Text>
+        <View style={styles.cameraContainer}>
+          <CameraView
+            ref={cameraRef}
+            style={StyleSheet.absoluteFill}
+            barcodeScannerSettings={{
+              barcodeTypes: ['qr'],
+            }}
+            onBarcodeScanned={handleBarcodeScanned}
+          />
+          {scanned && (
+            <TouchableOpacity
+              style={[styles.button, { position: 'absolute', bottom: 20 }]}
+              onPress={() => setScanned(false)}
+            >
+              <Text style={styles.buttonText}>Tap to Scan Again</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={styles.bottomNavigation}>
+          <TouchableOpacity style={styles.navButton}>
+            <Ionicons name="qr-code" size={24} color="white" />
           </TouchableOpacity>
-        )}
-      </View>
-
-      <View style={styles.bottomNavigation}>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="qr-code" size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="medkit" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <TouchableOpacity style={styles.navButton}>
+            <Ionicons name="medkit" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1E1E2C",
   },
   cameraContainer: {
     flex: 1,
@@ -122,8 +137,9 @@ const styles = StyleSheet.create({
   bottomNavigation: {
     flexDirection: "row",
     justifyContent: "space-around",
-    backgroundColor: "#1CAA6E",
+    backgroundColor: "rgba(0, 0, 0, 0)",
     paddingVertical: 10,
+    marginBottom: 20,
   },
   navButton: {
     padding: 5,

@@ -7,15 +7,22 @@ import {
   ScrollView,
   StyleSheet,
   StatusBar,
+  Image,
   Dimensions,
   SafeAreaView,
+  Modal,
+  Pressable,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
-export default function InterfaceScreen() {
+export default function InterfaceScreen({ userName = "Guest" }) {
   const [searchText, setSearchText] = useState('');
+  const [menuVisible, setMenuVisible] = useState(false);
+  const initial = userName ? userName.charAt(0).toUpperCase() : 'G';
+  const router = useRouter();
 
   return (
     <LinearGradient
@@ -23,188 +30,219 @@ export default function InterfaceScreen() {
       start={{ x: -1, y: 0.8 }}
       end={{ x: 1, y: 0.5 }}
       style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#1e1b4b" />
+        {/* Slide Panel Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={menuVisible}
+          onRequestClose={() => setMenuVisible(false)}
         >
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1e1b4b" />
-      
-      <View style={styles.gradient}>
-        <ScrollView 
-          style={styles.scrollView}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={styles.headerLeft}>
-              <TouchableOpacity style={styles.menuButton}>
-                <Text style={styles.menuIcon}>☰</Text>
+          <Pressable style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
+            <View style={styles.slidePanel}>
+              <TouchableOpacity style={styles.slidePanelButton}>
+                <Text style={styles.slidePanelIcon}>👤</Text>
+                <Text style={styles.slidePanelText}>Profile</Text>
               </TouchableOpacity>
-              <Text style={styles.logo}>MED~ORA</Text>
-            </View>
-            <View style={styles.headerRight}>
-              <TouchableOpacity style={styles.headerIcon}>
-                <Text style={styles.headerIconText}>G</Text>
+              <TouchableOpacity style={styles.slidePanelButton}>
+                <Text style={styles.slidePanelIcon}>✏️</Text>
+                <Text style={styles.slidePanelText}>Edit Profile</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton}>
-                <Text style={styles.icon}>🔔</Text>
+              <TouchableOpacity style={styles.slidePanelButton}>
+                <Text style={styles.slidePanelIcon}>🤖</Text>
+                <Text style={styles.slidePanelText}>AskOris</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton}>
-                <Text style={styles.icon}>🛒</Text>
+              <TouchableOpacity style={styles.slidePanelButton}>
+                <Text style={styles.slidePanelIcon}>🩺</Text>
+                <Text style={styles.slidePanelText}>Medical Analysis</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.slidePanelButton}>
+                <Text style={styles.slidePanelIcon}>📅</Text>
+                <Text style={styles.slidePanelText}>Reminder</Text>
               </TouchableOpacity>
             </View>
-          </View>
-
-          {/* Search Bar */}
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search for 'oral care'"
-              placeholderTextColor="rgba(255,255,255,0.6)"
-              value={searchText}
-              onChangeText={setSearchText}
-            />
-            <TouchableOpacity style={styles.searchIcon}>
-              <Text style={styles.searchIconText}>🔍</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* WeightWise Banner */}
-          <View style={styles.bannerContainer}>
-            <View style={styles.banner}>
-              <View style={styles.bannerContent}>
-                <Text style={styles.bannerSubtitle}>MED~ORA </Text>
-                <Text style={styles.bannerTitle}>
-                  Control lifestyle diseases through India's 1st doctor-led healthy weight loss program
-                </Text>
-                <Text style={styles.bannerDoctor}>
-                  -Dr. Helen Brooke Taussig (HOD){'\n'}
-                  MBBS.MD (Internal Medicine),USA
-                </Text>
-                <TouchableOpacity style={styles.exploreButton}>
-                  <Text style={styles.exploreButtonText}>Explore Now</Text>
+          </Pressable>
+        </Modal>
+        <View style={styles.gradient}>
+          <ScrollView
+            style={styles.scrollView}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
+            {/* Header */}
+            <View style={styles.header}>
+              <View style={styles.headerLeft}>
+                <TouchableOpacity style={styles.menuButton} onPress={() => setMenuVisible(true)}>
+                  <Text style={styles.menuIcon}>☰</Text>
+                </TouchableOpacity>
+                <Text style={styles.logo}>MED~ORA</Text>
+              </View>
+              <View style={styles.headerRight}>
+                <TouchableOpacity style={styles.headerIcon}>
+                  <Text style={styles.headerIconText}>{initial}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconButton}>
+                  <Text style={styles.icon}>🔔</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.bannerImage}>
-                <View style={styles.doctorImagePlaceholder}>
-                  <Text style={styles.doctorIcon}>👩‍⚕️</Text>
+            </View>
+
+            {/* Search Bar */}
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search for 'oral care'"
+                placeholderTextColor="rgba(255,255,255,0.6)"
+                value={searchText}
+                onChangeText={setSearchText}
+              />
+              <TouchableOpacity style={styles.searchIcon}>
+                <Text style={styles.searchIconText}>🔍</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Banner */}
+            <View style={styles.bannerContainer}>
+              <View style={styles.banner}>
+                <View style={styles.bannerContent}>
+                  <Text style={styles.bannerSubtitle}>MED~ORA </Text>
+                  <Text style={styles.bannerTitle}>
+                    Control lifestyle diseases through India's 1st doctor-led healthy weight loss program
+                  </Text>
+                  <Text style={styles.bannerDoctor}>
+                    -Dr. Helen Brooke Taussig (HOD){"\n"}
+                    MBBS.MD (Internal Medicine),USA
+                  </Text>
+                  <TouchableOpacity style={styles.exploreButton}>
+                    <Text style={styles.exploreButtonText}>Explore Now</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.bannerImage}>
+                  <View style={styles.doctorImagePlaceholder}>
+                    <Image style={styles.docimg} source={require('./images/doc.png')} />
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
 
-          {/* Prescription Scanner */}
-          <View style={styles.scannerContainer}>
-            <View style={styles.scanner}>
-              <View style={styles.scannerLeft}>
-                <View style={styles.scannerIcon}>
-                  <Text style={styles.scannerIconText}>📄</Text>
+            {/* Prescription Scanner */}
+            <View style={styles.scannerContainer}>
+              <View style={styles.scanner}>
+                <View style={styles.scannerLeft}>
+                  <View style={styles.scannerIcon}>
+                    <Text style={styles.scannerIconText}>📄</Text>
+                  </View>
+                  <Text style={styles.scannerText}>Scan & Summarise your prescription !</Text>
                 </View>
-                <Text style={styles.scannerText}>Scan & Summarise your prescription !</Text>
+                <TouchableOpacity
+                  style={styles.scanButton}
+                  onPress={() => router.push('/qrscan')}
+                >
+                  <Text style={styles.scanButtonText}>Scan</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.scanButton}>
-                <Text style={styles.scanButtonText}>Scan</Text>
-              </TouchableOpacity>
             </View>
-          </View>
 
-          {/* Feature Cards Row */}
-          <View style={styles.featureRow}>
-            <View style={styles.featureCard}>
-              <View style={styles.featureIconContainer}>
-                <Text style={styles.featureIcon}>🤖</Text>
-              </View>
-              <Text style={styles.featureSubtext}>Hey! How can I help you ?</Text>
-              <Text style={styles.featureTitle}>#AskOris</Text>
-              <Text style={styles.featurePowered}>Powered by Gemini</Text>
-            </View>
-            
-            <View style={styles.featureCard}>
-              <View style={styles.featureIconContainer}>
-                <Text style={styles.featureIcon}>📤</Text>
-              </View>
-              <Text style={styles.featureTitle}>Upload your documents</Text>
-            </View>
-          </View>
-
-          {/* Reports Section */}
-          <View style={styles.reportsContainer}>
-            <View style={styles.reportsCard}>
-              <Text style={styles.reportsTitle}>Access all your Reports</Text>
-              <Text style={styles.reportsSubtitle}>VIEW ALL YOUR MEDICAL HISTORY</Text>
-              <TouchableOpacity>
-                <Text style={styles.reportsButton}>CLICK TO VIEW ></Text>
-              </TouchableOpacity>
+            {/* Feature Cards Row */}
+            <View style={styles.featureRow}>
               
-              <View style={styles.phoneIllustration}>
-                <Text style={styles.phoneIcon}>📱</Text>
-              </View>
-              
-              <View style={styles.dotsContainer}>
-                <View style={styles.dotActive} />
-                <View style={styles.dot} />
-                <View style={styles.dot} />
-              </View>
-            </View>
-          </View>
-
-          {/* Utility Section */}
-          <View style={styles.utilityContainer}>
-            <Text style={styles.utilityTitle}>MED~ORA <Text style={styles.utilityItalic}>Utility</Text></Text>
-            <View style={styles.utilityRow}>
-              <TouchableOpacity style={styles.utilityCard}>
-                <View style={styles.utilityIconContainer}>
-                  <Text style={styles.utilityIcon}>🩺</Text>
+              {/* #AskOris */}
+              <TouchableOpacity style={styles.featureCard}>
+                <View style={styles.featureIconContainer}>
+                  <Text style={styles.featureIcon}>🤖</Text>
                 </View>
-                <Text style={styles.utilityText}>Medical Analysis</Text>
+                <Text style={styles.featureSubtext}>Hey! How can I help you ?</Text>
+                <Text style={styles.featureTitle}>#AskOris</Text>
+                <Text style={styles.featurePowered}>Powered by Gemini</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.utilityCard}>
-                <View style={styles.utilityIconContainer}>
-                  <Text style={styles.utilityIcon}>📱</Text>
+              {/* Upload your documents */}
+              <TouchableOpacity style={styles.featureCard}>
+                <View style={styles.featureIconContainer}>
+                  <Text style={styles.featureIcon}>📤</Text>
                 </View>
-                <Text style={styles.utilityText}>Generator QR</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.utilityCard}>
-                <View style={styles.utilityIconContainer}>
-                  <Text style={styles.utilityIcon}>📅</Text>
-                </View>
-                <Text style={styles.utilityText}>Reminder</Text>
+                <Text style={styles.featureSubtext}>Fed up of carrying files?</Text>
+                <Text style={styles.featureTitle}>Upload your documents</Text>
+                <Text style={styles.featurePowered}>Secured with us</Text>
               </TouchableOpacity>
             </View>
-          </View>
 
-          {/* Health Goals Banner */}
-          <View style={styles.healthGoalsContainer}>
-            <View style={styles.healthGoalsBanner}>
-              <Text style={styles.healthGoalsTitle}>Unlock the path to your health goals</Text>
-              <Text style={styles.healthGoalsSubtitle}>
-                Get personalized recommendations on supplements, lifestyle and diet with MED~ORA
-              </Text>
-              <Text style={styles.healthGoalsArrow}>→</Text>
-              <View style={styles.silhouette} />
-            </View>
-          </View>
-        </ScrollView>
-
-        {/* Bottom Navigation */}
-        <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navItem}>
-            <Text style={styles.navIcon}>🏠</Text>
-            <Text style={styles.navText}>Home</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.sosButton}>
-            <Text style={styles.sosText}>SOS</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.navItem}>
-            <Text style={styles.navIcon}>👤</Text>
-            <Text style={styles.navText}>Profile</Text>
-          </TouchableOpacity>
-        </View>
+            {/* Reports Section */}
+            <View style={styles.reportsContainer}>
+  <View style={styles.reportsCard}>
+    <View style={styles.reportsRow}>
+      <View style={styles.reportsTextCol}>
+        <Text style={styles.reportsTitle}>Access all your Reports</Text>
+        <Text style={styles.reportsSubtitle}>VIEW ALL YOUR MEDICAL HISTORY</Text>
+        <TouchableOpacity style={styles.reportsBtnWrap}>
+          <Text style={styles.reportsButton}>CLICK TO VIEW &gt;</Text>
+        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      <View style={styles.reportsImgCol}>
+        <Image style={styles.authimg} source={require('./images/auth.png')} />
+      </View>
+    </View>
+  </View>
+</View>
+
+
+            {/* Utility Section */}
+            <View style={styles.utilityContainer}>
+              <Text style={styles.utilityTitle}>
+                MED~ORA <Text style={styles.utilityItalic}>Utility</Text>
+              </Text>
+              <View style={styles.utilityRow}>
+                <TouchableOpacity style={styles.utilityCard}>
+                  <View style={styles.utilityIconContainer}>
+                    <Text style={styles.utilityIcon}>🩺</Text>
+                  </View>
+                  <Text style={styles.utilityText}>Medical Analysis</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.utilityCard}>
+                  <View style={styles.utilityIconContainer}>
+                    <Text style={styles.utilityIcon}>📱</Text>
+                  </View>
+                  <Text style={styles.utilityText}>Generator QR</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.utilityCard}>
+                  <View style={styles.utilityIconContainer}>
+                    <Text style={styles.utilityIcon}>📅</Text>
+                  </View>
+                  <Text style={styles.utilityText}>Reminder</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Health Goals Banner */}
+            <View style={styles.healthGoalsContainer}>
+              <View style={styles.healthGoalsBanner}>
+                <Text style={styles.healthGoalsTitle}>Unlock the path to your health goals</Text>
+                <Text style={styles.healthGoalsSubtitle}>
+                  Get personalized recommendations on supplements, lifestyle and diet with MED~ORA
+                </Text>
+                <Text style={styles.healthGoalsArrow}>→</Text>
+                <View style={styles.silhouette} />
+              </View>
+            </View>
+          </ScrollView>
+
+          {/* Bottom Navigation */}
+          <View style={styles.bottomNav}>
+            <TouchableOpacity style={styles.navItem}>
+              <Text style={styles.navIcon}>🏠</Text>
+              <Text style={styles.navText}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sosButton}>
+              <Text style={styles.sosText}>SOS</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navItem}>
+              <Text style={styles.navIcon}>👤</Text>
+              <Text style={styles.navText}>Profile</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
     </LinearGradient>
   );
 }
@@ -222,14 +260,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 80,
   },
-  
-  // Header Styles
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingTop: 12,
     paddingBottom: 16,
   },
   headerLeft: {
@@ -273,12 +309,10 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 18,
   },
-
-  // Search Styles
   searchContainer: {
-    paddingHorizontal: 16,
+    
     marginBottom: 16,
-    position: 'relative',
+    paddingHorizontal: 40,
   },
   searchInput: {
     backgroundColor: 'rgba(255,255,255,0.1)',
@@ -293,28 +327,28 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     position: 'absolute',
-    right: 28,
-    top: 12,
+    right: 50,
+    top: 10,
   },
   searchIconText: {
     fontSize: 16,
   },
-
-  // Banner Styles
   bannerContainer: {
     paddingHorizontal: 16,
-    marginBottom: 10,
+    marginBottom: 8,
+    justifyContent: 'space-between',
   },
   banner: {
     backgroundColor: '#3730a3',
     borderRadius: 16,
-    padding: 16,
+    padding: 15,
+    justifyContent: 'space-around',
     flexDirection: 'row',
     overflow: 'hidden',
   },
   bannerContent: {
     flex: 1,
-    paddingRight: 8,
+   
   },
   bannerSubtitle: {
     color: 'rgba(255,255,255,0.9)',
@@ -327,7 +361,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 14,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   bannerDoctor: {
     color: 'rgba(255,255,255,0.8)',
@@ -348,30 +382,32 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   bannerImage: {
-    width: 100,
-    height: 80,
-    backgroundColor: '#16a34a',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   doctorImagePlaceholder: {
     alignItems: 'center',
-    justifyContent: 'center',
+    marginLeft: 10,
+    
+    width: 100,
+    justifyContent: 'space-between',
   },
-  doctorIcon: {
-    fontSize: 40,
+  docimg: {
+    top:10,
+    width: '100%',
+    borderRadius: 10,
   },
+  
 
-  // Scanner Styles
   scannerContainer: {
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 14,
   },
   scanner: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(10, 28, 78, 0.81)',
     borderRadius: 16,
-    padding: 12,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -391,7 +427,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   scannerIconText: {
-    fontSize: 16,
+    fontSize: 13,
   },
   scannerText: {
     color: 'white',
@@ -410,18 +446,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
-
-  // Feature Cards Styles
   featureRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 13,
   },
   featureCard: {
     flex: 1,
     backgroundColor: 'rgba(255,255,255,0.1)',
     borderRadius: 16,
-    padding: 16,
+    padding: 14,
     alignItems: 'center',
     marginHorizontal: 6,
   },
@@ -455,47 +489,66 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
   },
-
-  // Reports Styles
   reportsContainer: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
-  },
+  paddingHorizontal: 16,
+  marginBottom: 10,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
   reportsCard: {
-    backgroundColor: '#1d4ed8',
-    borderRadius: 16,
-    padding: 16,
-    position: 'relative',
-  },
+  borderRadius: 16,
+  padding: 16,
+  width: '100%',
+  backgroundColor: 'rgba(10, 28, 78, 0.81)',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  borderWidth: 1,
+    borderColor: 'linear-gradient(rgb(141, 101, 173),rgb(236, 0, 0))',
+},
+reportsRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  width: '100%',
+},
+reportsTextCol: {
+  flex: 1.5,
+  justifyContent: 'center',
+},
+reportsImgCol: {
+  flex: 1,
+  alignItems: 'flex-end',
+  justifyContent: 'center',
+},
   reportsTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  reportsSubtitle: {
-    color: 'rgba(255,255,255,0.9)',
-    fontSize: 14,
-    marginBottom: 12,
-  },
-  reportsButton: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '500',
-    letterSpacing: 1,
-  },
-  phoneIllustration: {
-    position: 'absolute',
-    right: 12,
-    top: '50%',
-    marginTop: -24,
-    width: 48,
-    height: 48,
-    backgroundColor: 'rgba(59,130,246,0.3)',
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  color: 'white',
+  fontSize: 14,
+  fontWeight: '600',
+  marginBottom: 2,
+  letterSpacing: 1,
+},
+reportsSubtitle: {
+  color: 'rgba(255,255,255,0.9)',
+  fontSize: 10,
+  marginBottom: 2,
+  letterSpacing: 1,
+},
+reportsBtnWrap: {
+  alignItems: 'flex-start',
+  marginTop: 8,
+},
+reportsButton: {
+  color: 'white',
+  fontSize: 10,
+  fontWeight: '500',
+  letterSpacing: 3,
+  marginTop: 8,
+},
+authimg: {
+  width: 80,
+  height: 80,
+  borderRadius: 18,
+},
+
   phoneIcon: {
     fontSize: 24,
   },
@@ -517,8 +570,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.5)',
     marginRight: 6,
   },
-
-  // Utility Styles
   utilityContainer: {
     paddingHorizontal: 16,
     marginBottom: 16,
@@ -561,8 +612,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
-
-  // Health Goals Styles
   healthGoalsContainer: {
     paddingHorizontal: 16,
     marginBottom: 16,
@@ -599,8 +648,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.2)',
     borderTopLeftRadius: 30,
   },
-
-  // Bottom Navigation Styles
   bottomNav: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -634,5 +681,41 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
+  },
+  // Slide panel styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  slidePanel: {
+    width: 220,
+    backgroundColor: '#23235b',
+    paddingTop: 48,
+    paddingBottom: 24,
+    paddingHorizontal: 16,
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
+    elevation: 8,
+    height: '100%',
+  },
+  slidePanelButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.08)',
+  },
+  slidePanelIcon: {
+    fontSize: 22,
+    marginRight: 16,
+    color: 'white',
+  },
+  slidePanelText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '400',
   },
 });

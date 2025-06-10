@@ -62,13 +62,13 @@ const home = () => {
           </TouchableOpacity>
 
           <TouchableOpacity 
-            onPress={() => router.push('/patient')}
+            onPress={() => router.push('/doctor')}
           >
             <LinearGradient
             colors={['rgb(255, 255, 255)', 'rgb(22, 38, 104)']}
             start={{ x:0, y: 1.9 }}
             end={{ x: 0.9, y: 0.1 }}
-            onPress={() => router.push('/patient')}
+            onPress={() => router.push('/doctor')}
             style={styles.button}>
             
             <Text style={styles.buttonText}>Hey I'm Doctor</Text>
@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'linear-gradient(rgb(141, 101, 173),rgb(236, 0, 0))',
-     elevation: 10,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 4 },

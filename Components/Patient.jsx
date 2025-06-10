@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,16 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  StatusBar
+  StatusBar,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+
+WebBrowser.maybeCompleteAuthSession();
 
 const Patient = () => {
   const router = useRouter();
@@ -18,8 +23,31 @@ const Patient = () => {
   const [otp, setOtp] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
+  // Google Auth
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: 'YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com',
+    iosClientId: 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com',
+    expoClientId: 'YOUR_EXPO_CLIENT_ID.apps.googleusercontent.com',
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      // You can fetch user info here with response.authentication.accessToken
+      router.push('/interfaceScreen');
+    }
+  }, [response]);
+
+  // Simulate OTP sending
   const handleSendOTP = () => {
-    console.log("Sending OTP to", mobileNumber);
+    if (!mobileNumber || mobileNumber.length < 10) {
+      Alert.alert('Please enter a valid mobile number.');
+      return;
+    }
+    // Generate a random 6-digit OTP
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    setOtp(generatedOtp);
+    Alert.alert('OTP Sent', `Your OTP is: ${generatedOtp}`);
+    // In real app, send OTP to mobileNumber here
   };
 
   const handleSignIn = () => {
@@ -29,10 +57,10 @@ const Patient = () => {
 
   return (
     <LinearGradient
-  colors={['rgb(70, 99, 214)', 'rgb(45, 62, 129)', 'rgb(5, 21, 59)']}
-  start={{ x: -1, y: 0.8 }}
-  end={{ x: 1, y: 0.5 }}
-  style={{ flex: 1 }}
+      colors={['rgb(70, 99, 214)', 'rgb(45, 62, 129)', 'rgb(5, 21, 59)']}
+      start={{ x: -1, y: 0.8 }}
+      end={{ x: 1, y: 0.5 }}
+      style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.safeArea}>
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
@@ -41,67 +69,89 @@ const Patient = () => {
 
           {/* Header Block */}
           <View style={styles.welcomeContainer}>
-            <View style={styles.imageContainer}>
-              <Image
-                source={require('./images/patient.png')}
-                style={styles.image}
-              />
-            </View>
-            <Text style={styles.welcomeText}>Welcome !</Text>
+            <Text style={styles.welcomeText}> MED~ORA</Text>
+            <Text style={styles.tagline}>Your Health, Our Priority!</Text>
           </View>
 
-          {/* Mobile Number Input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mobile No.</Text>
-            <View style={styles.mobileInputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder=""
-                placeholderTextColor="#ccc"
-                keyboardType="phone-pad"
-                value={mobileNumber}
-                onChangeText={setMobileNumber}
-              />
-              <TouchableOpacity style={styles.otpButton} onPress={handleSendOTP}>
-                <Text style={styles.otpButtonText}>Send OTP</Text>
+          <LinearGradient
+            colors={['rgb(41, 88, 184)', 'rgba(4, 22, 92, 0.66)']}
+            start={{ x: 0, y: 1.9 }}
+            end={{ x: 0, y: 0.5 }}
+            style={{ borderRadius: 45 }}
+          >
+            <View style={styles.totalContainer}>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Mobile No.</Text>
+                <View style={styles.mobileInputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="+91"
+                    placeholderTextColor="rgba(238, 237, 237, 0.38)"
+                    keyboardType="phone-pad"
+                    value={mobileNumber}
+                    onChangeText={setMobileNumber}
+                    maxLength={10}
+                  />
+                </View>
+                <TouchableOpacity onPress={handleSendOTP}>
+                  <Text style={styles.otpButtonText}>{'\n'}Generate OTP</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* OTP Input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>OTP</Text>
+                <View style={styles.mobileInputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder=""
+                    placeholderTextColor="#ccc"
+                    keyboardType="phone-pad"
+                    value={otp}
+                    onChangeText={setOtp}
+                    maxLength={6}
+                  />
+                </View>
+              </View>
+
+              {/* Remember Me */}
+              <View style={styles.checkboxContainer}>
+                <TouchableOpacity
+                  style={styles.checkbox}
+                  onPress={() => setRememberMe(!rememberMe)}
+                >
+                  {rememberMe && <View style={styles.checkboxInner} />}
+                </TouchableOpacity>
+                <Text style={styles.checkboxLabel}>Remember Me</Text>
+              </View>
+
+              {/* Sign In with Google */}
+              <TouchableOpacity
+                style={styles.signInButton}
+                onPress={() => promptAsync()}
+                disabled={!request}
+              >
+                <Text style={styles.signInButtonText}>Login With Google</Text>
+                <Image style={styles.iconimg} source={require('./images/google.png')} />
               </TouchableOpacity>
+
+              {/* Register */}
+              <TouchableOpacity style={styles.registerButton} onPress={() => router.push('/interfaceScreen')}>
+                <Text style={styles.registerButtonText}>LOGIN</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/register')}>
+                <Text style={styles.registerButtonText}>New User? Register{'\n'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.loginicons} onPress={() => router.push('/register')}>
+                <Image style={styles.iconimg1} source={require('./images/fb.png')} />
+                <Image style={styles.iconimg1} source={require('./images/x.png')} />
+                <Image style={styles.iconimg1} source={require('./images/apple.png')} />
+              </TouchableOpacity>
+
             </View>
-          </View>
+          </LinearGradient>
 
-          {/* OTP Input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>OTP</Text>
-            <TextInput
-              style={styles.input}
-              placeholder=""
-              placeholderTextColor="#ccc"
-              keyboardType="number-pad"
-              value={otp}
-              onChangeText={setOtp}
-              secureTextEntry
-            />
-          </View>
-
-          {/* Remember Me */}
-          <View style={styles.checkboxContainer}>
-            <TouchableOpacity
-              style={styles.checkbox}
-              onPress={() => setRememberMe(!rememberMe)}
-            >
-              {rememberMe && <View style={styles.checkboxInner} />}
-            </TouchableOpacity>
-            <Text style={styles.checkboxLabel}>Remember Me</Text>
-          </View>
-
-          {/* Sign In */}
-          <TouchableOpacity style={styles.signInButton}  onPress={() => router.push('/interfaceScreen')}>
-            <Text style={styles.signInButtonText}>SIGN IN</Text>
-          </TouchableOpacity>
-
-          {/* Register */}
-          <TouchableOpacity style={styles.registerButton} onPress={() => router.push('/register')}>
-            <Text style={styles.registerButtonText}>New User? Register</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -109,41 +159,34 @@ const Patient = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
+  safeArea: {},
   container: {
-    flex: 1,
+    marginTop: 60,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
   },
   welcomeContainer: {
-    marginBottom: 20,
+    marginBottom: 30,
+    marginTop: -30,
     alignItems: 'center',
     justifyContent: 'center',
     width: '90%',
     padding: 20,
-    
-    borderRadius: 25,
+    paddingVertical: 69,
+    borderRadius: 35,
     borderColor: '#a6a6ff',
     borderWidth: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: 'rgba(17, 13, 13, 0.06)',
   },
-  imageContainer: {
-    width: 80,
-    height: 80,
-    marginBottom: 10,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 50,
-    backgroundColor: '#BE464E',
+  tagline: {
+    fontSize: 15,
+    color: 'white',
+    fontFamily: 'serif',
   },
   welcomeText: {
-    fontSize: 26,
+    fontSize: 40,
     fontWeight: '700',
     color: 'white',
     fontFamily: 'serif',
@@ -152,14 +195,40 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     marginBottom: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderRadius: 20,
     padding: 12,
   },
+  iconimg: {
+    marginLeft: 5,
+    width: 25,
+    marginTop: 1,
+    height: 25,
+  },
+  iconimg1: {
+    marginLeft: 15,
+    width: 30,
+    marginTop: 1,
+    height: 30,
+  },
+  totalContainer: {
+    width: '90%',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 45,
+    borderColor: '#a6a6ff',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    alignItems: 'center',
+  },
   label: {
-    color: 'white',
+    color: 'rgba(238, 237, 237, 0.77)',
     fontSize: 14,
     marginBottom: 6,
+    marginLeft: 5,
     fontWeight: '600',
   },
   mobileInputContainer: {
@@ -176,19 +245,20 @@ const styles = StyleSheet.create({
     color: 'white',
     width: '100%',
   },
-  otpButton: {
-    position: 'absolute',
-    right: 10,
-    top: 10,
-    backgroundColor: '#F20C5C',
-    borderRadius: 18,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    elevation: 2,
+  input1: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: 'white',
+    width: '100%',
   },
   otpButtonText: {
     color: '#fff',
     fontSize: 12,
+    marginBottom: -30,
+    textAlign: 'right',
     fontWeight: 'bold',
   },
   checkboxContainer: {
@@ -196,8 +266,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     marginBottom: 20,
-    marginTop: -5,
-    paddingLeft: 5,
+    marginTop: -15,
+    paddingLeft: 10,
   },
   checkbox: {
     width: 18,
@@ -208,7 +278,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
-    borderRadius: 4,
+    borderRadius: 50,
   },
   checkboxInner: {
     width: 12,
@@ -222,10 +292,12 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     backgroundColor: '#000',
-    borderRadius: 25,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+    borderRadius: 15,
+    flexDirection: 'row',
+    paddingVertical: 10,
+    paddingHorizontal: 40,
     width: '100%',
+    justifyContent: 'center',
     marginBottom: 15,
     alignItems: 'center',
   },
@@ -238,9 +310,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(102, 102, 153, 0.3)',
     borderRadius: 25,
     paddingVertical: 14,
-    paddingHorizontal: 20,
+    paddingHorizontal: 70,
     width: '100%',
     alignItems: 'center',
+    marginBottom: 10,
+  },
+  loginicons: {
+    flexDirection: 'row',
+    width: '100%',
+    marginRight: 20,
+    borderRadius: 25,
+    marginTop: 10,
     marginBottom: 10,
   },
   registerButtonText: {
